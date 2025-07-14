@@ -1,6 +1,6 @@
 # 🍳 Sous-Chef AI – Personalized Healthy Recipe Creator
 
-[Live Demo 🚀](https://sous-chef-ai-recipe-creator.onrender.com/)
+[Live Demo 🚀](https://sous-chef-ai-recipe-creator.onrender.com)
 
 Sous-Chef AI is an intelligent recipe generator that transforms your available ingredients, health stats, and dietary preferences into personalized, healthy, and delicious recipes – all powered by **Gemini API**.
 
