@@ -2,7 +2,7 @@
 
 [Live Demo 🚀](https://sous-chef-ai-recipe-creator.onrender.com)
 
-[](https://www.youtube.com/watch?v=0fXcSyrjjgc)
+[Demo Video](https://www.youtube.com/watch?v=0fXcSyrjjgc)
 
 Sous-Chef AI is an intelligent recipe generator that transforms your available ingredients, health stats, and dietary preferences into personalized, healthy, and delicious recipes – all powered by **Gemini API**.
 
