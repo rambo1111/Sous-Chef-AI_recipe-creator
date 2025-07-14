@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sous-Chef AI Recipe Creator - Healthy Cooking Made Easy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🍳 Sous-Chef AI</h1>
+            <p>Transform your ingredients into healthy, personalized recipes</p>
+        </header>
+
+        <main class="main-content">
+            <form method="POST" class="recipe-form">
+                <!-- Enhanced Ingredients Section -->
+                    <div class="form-section enhanced-ingredients">
+                        <h2>🥕 Tell Me What You Need</h2>
+                        <div class="input-group">
+                            <label for="ingredients">What ingredients do you have, or what's your situation?</label>
+                            <textarea name="ingredients" id="ingredients" rows="4" 
+                                    placeholder="Try different types of input:
+• Ingredients: chicken breast, broccoli, quinoa, olive oil...
+• Situation: I just came from gym, need high protein recipe
+• Feeling: I'm feeling sick today, what should I eat?
+• Quick meal: Need something easy and fast for dinner
+• Dietary goal: Want to lose weight, suggest healthy lunch"
+                                    required></textarea>
+                        </div>
+                        
+                        <div class="example-inputs">
+                            <h4>💡 Example Inputs:</h4>
+                            <p><strong>Ingredients:</strong> "chicken, spinach, garlic, olive oil"</p>
+                            <p><strong>Situation:</strong> "just finished workout, need protein-rich meal"</p>
+                            <p><strong>Mood/Health:</strong> "feeling tired, need energizing breakfast"</p>
+                            <p><strong>Quick Request:</strong> "need healthy lunch, have 20 minutes"</p>
+                        </div>
+                    </div>
+
+                <!-- Health Stats Section -->
+                <div class="form-section">
+                    <h2>🏥 Health Information <span class="optional">(Optional)</span></h2>
+                    <div class="health-grid">
+                        <div class="input-group">
+                            <label for="blood_pressure">Blood Pressure</label>
+                            <select name="blood_pressure" id="blood_pressure">
+                                <option value="">Select...</option>
+                                <option value="normal">Normal (120/80)</option>
+                                <option value="elevated">Elevated (120-129/80)</option>
+                                <option value="high_stage1">High Stage 1 (130-139/80-89)</option>
+                                <option value="high_stage2">High Stage 2 (140+/90+)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="blood_sugar">Blood Sugar Level</label>
+                            <select name="blood_sugar" id="blood_sugar">
+                                <option value="">Select...</option>
+                                <option value="normal">Normal (70-100 mg/dL)</option>
+                                <option value="prediabetic">Prediabetic (100-125 mg/dL)</option>
+                                <option value="diabetic">Diabetic (126+ mg/dL)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="cholesterol">Cholesterol Level</label>
+                            <select name="cholesterol" id="cholesterol">
+                                <option value="">Select...</option>
+                                <option value="normal">Normal (Less than 200 mg/dL)</option>
+                                <option value="borderline">Borderline (200-239 mg/dL)</option>
+                                <option value="high">High (240+ mg/dL)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dietary Restrictions Section -->
+                <div class="form-section">
+                    <h2>🌱 Dietary Preferences <span class="optional">(Optional)</span></h2>
+                    <div class="dietary-grid">
+                        <div class="input-group">
+                            <label for="dietary_restrictions">Dietary Restrictions</label>
+                            <input type="text" name="dietary_restrictions" id="dietary_restrictions" 
+                                   placeholder="e.g., vegetarian, vegan, keto, paleo, gluten-free...">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="allergies">Allergies</label>
+                            <input type="text" name="allergies" id="allergies" 
+                                   placeholder="e.g., nuts, dairy, shellfish, eggs...">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span>✨ Create My Recipe</span>
+                </button>
+            </form>
+
+            {% if error_message %}
+            <div class="error-section">
+                <h2>⚠️ Error</h2>
+                <div class="error-content">
+                    <p>{{ error_message }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if recipe_data %}
+            <div class="response-section">
+                <div class="recipe-tabs">
+                    <button class="tab-button active" data-tab="recipe">🍽️ Recipe</button>
+                    <button class="tab-button" data-tab="nutrition">📊 Nutrition</button>
+                    <button class="tab-button" data-tab="facts">🧠 Facts</button>
+                </div>
+
+                <!-- Recipe Tab -->
+                <div class="tab-content active" id="recipe-tab">
+                    <div class="recipe-header">
+                        <h1 class="recipe-title">{{ recipe_data.recipe.name }}</h1>
+                        <div class="recipe-meta">
+                            <span class="meta-item">⏱️ Prep: {{ recipe_data.recipe.prep_time }}</span>
+                            <span class="meta-item">🔥 Cook: {{ recipe_data.recipe.cook_time }}</span>
+                            <span class="meta-item">⏰ Total: {{ recipe_data.recipe.total_time }}</span>
+                            <span class="meta-item">🍽️ Serves: {{ recipe_data.recipe.servings }}</span>
+                        </div>
+                    </div>
+
+                    <div class="recipe-sections">
+                        <div class="ingredients-section">
+                            <h3>🥘 Ingredients</h3>
+                            <ul class="ingredients-list">
+                                {% for ingredient in recipe_data.recipe.ingredients %}
+                                <li>{{ ingredient }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="instructions-section">
+                            <h3>👨‍🍳 Instructions</h3>
+                            <ol class="instructions-list">
+                                {% for instruction in recipe_data.recipe.instructions %}
+                                <li>{{ instruction }}</li>
+                                {% endfor %}
+                            </ol>
+                        </div>
+
+                        <div class="health-tips-section">
+                            <h3>💡 Health Tips</h3>
+                            <ul class="tips-list">
+                                {% for tip in recipe_data.recipe.health_tips %}
+                                <li>{{ tip }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="storage-section">
+                            <h3>🗄️ Storage</h3>
+                            <p class="storage-info">{{ recipe_data.recipe.storage }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nutrition Tab -->
+                <div class="tab-content" id="nutrition-tab">
+                    <div class="nutrition-header">
+                        <h2>📊 Nutritional Information</h2>
+                        <p class="nutrition-subtitle">Per serving nutritional breakdown</p>
+                    </div>
+
+                    <div class="nutrition-grid">
+                        <div class="nutrition-card">
+                            <div class="nutrition-value">{{ recipe_data.nutritional_info.calories_per_serving }}</div>
+                            <div class="nutrition-label">Calories</div>
+                        </div>
+                        <div class="nutrition-card">
+                            <div class="nutrition-value">{{ recipe_data.nutritional_info.protein }}</div>
+                            <div class="nutrition-label">Protein</div>
+                        </div>
+                        <div class="nutrition-card">
+                            <div class="nutrition-value">{{ recipe_data.nutritional_info.carbs }}</div>
+                            <div class="nutrition-label">Carbs</div>
+                        </div>
+                        <div class="nutrition-card">
+                            <div class="nutrition-value">{{ recipe_data.nutritional_info.fat }}</div>
+                            <div class="nutrition-label">Fat</div>
+                        </div>
+                        <div class="nutrition-card">
+                            <div class="nutrition-value">{{ recipe_data.nutritional_info.fiber }}</div>
+                            <div class="nutrition-label">Fiber</div>
+                        </div>
+                        <div class="nutrition-card">
+                            <div class="nutrition-value">{{ recipe_data.nutritional_info.sodium }}</div>
+                            <div class="nutrition-label">Sodium</div>
+                        </div>
+                    </div>
+
+                    <div class="health-benefits-section">
+                        <h3>🌟 Health Benefits</h3>
+                        <ul class="benefits-list">
+                            {% for benefit in recipe_data.nutritional_info.health_benefits %}
+                            <li>{{ benefit }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Facts Tab -->
+                <div class="tab-content" id="facts-tab">
+                    <div class="facts-header">
+                        <h2>🧠 Recipe Facts</h2>
+                    </div>
+
+                    <div class="facts-grid">
+                        <div class="fact-card">
+                            <h4>🌍 Cuisine Type</h4>
+                            <p>{{ recipe_data.recipe_facts.cuisine_type }}</p>
+                        </div>
+                        <div class="fact-card">
+                            <h4>📈 Difficulty</h4>
+                            <p>{{ recipe_data.recipe_facts.difficulty }}</p>
+                        </div>
+                        <div class="fact-card">
+                            <h4>🍽️ Meal Type</h4>
+                            <p>{{ recipe_data.recipe_facts.meal_type }}</p>
+                        </div>
+                        <div class="fact-card">
+                            <h4>🏷️ Dietary Tags</h4>
+                            <div class="tags-container">
+                                {% for tag in recipe_data.recipe_facts.dietary_tags %}
+                                <span class="tag">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fun-facts-section">
+                        <h3>🎯 Did You Know?</h3>
+                        <div class="fun-facts-list">
+                            {% for fact in recipe_data.recipe_facts.fun_facts %}
+                            <div class="fun-fact-item">
+                                <span class="fact-icon">💡</span>
+                                <p>{{ fact }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+
+       <footer class="footer">
+            <p>Made with ❤️ for healthy cooking</p>
+            <a href="https://github.com/rambo1111/Sous-Chef-AI_recipe-creator" target="_blank" class="github-link">
+                <img src="{{ url_for('static', filename='github-mark.svg') }}" alt="GitHub" class="github-icon">
+                <span>View on GitHub</span>
+            </a>
+        </footer>
+
+    </div>
+
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetTab = this.dataset.tab;
+                    
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(targetTab + '-tab').classList.add('active');
+                });
+            });
+        });
+
+        // Form submission handling
+        document.querySelector('.recipe-form').addEventListener('submit', function(e) {
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = '<span>🔄 Creating Recipe...</span>';
+            submitBtn.disabled = true;
+        });
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('ingredients');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    </script>
+</body>
+</html>

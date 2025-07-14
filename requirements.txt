@@ -1,0 +1,5 @@
+flask
+gunicorn
+uvicorn
+google-genai
+google-generativeai
