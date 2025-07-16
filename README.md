@@ -16,7 +16,7 @@ Sous-Chef AI is an intelligent recipe generator that transforms your available i
 * **📊 Nutritional Breakdown:** Includes calories, macros, fiber, and sodium per serving.
 * **🧠 Fun Facts & Tags:** Learn interesting facts, meal type, cuisine, and difficulty levels.
 * **🔥 Stylish UI:** Modern and responsive interface built with HTML, CSS, and JavaScript.
-* **⚙️ Gemini-Powered Backend:** Uses Google Gemini 1.5 Flash API to dynamically generate accurate JSON-based recipes.
+* **⚙️ Gemini-Powered Backend:** Uses Google Gemini 2.5 Flash API to dynamically generate accurate JSON-based recipes.
 
 ---
 
