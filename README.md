@@ -24,7 +24,7 @@ Sous-Chef AI is an intelligent recipe generator that transforms your available i
 
 * **Frontend:** HTML5, CSS3, Vanilla JavaScript
 * **Backend:** Python (Flask)
-* **AI Model:** Google Gemini 1.5 Flash (via `google-generativeai`)
+* **AI Model:** Google Gemini 2.5 Flash (via `google-generativeai`)
 * **Deployment:** Render.com
 * **API Integration:** Environment-based Gemini API key usage
 
